@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
-import Child from './Child';
 import Navigation from './Navigation';
+import { BOOKS } from './utils/FakeData';
 import { createTheme, ThemeProvider } from '@mui/material';
 
 const theme = createTheme({
@@ -25,20 +25,27 @@ const theme = createTheme({
     },
   },
 });
+
+
+const BookContext = React.createContext(null)
+
+export const useBooks = () => {
+  return React.useContext(BookContext)
+}
+
 function App() {
-  const [counterState, setCounterState] = React.useState(0);
-  const incrementCounterState = () => {
-    setCounterState(prevValue => {
-      prevValue++;
-      console.log(prevValue);
-      return prevValue;
-    });
-  };
+  const [listBook, setListBook] = React.useState(BOOKS)
+
+  const handleListBook = (bookArray) => {
+    setListBook(bookArray)
+  }
+
   return (
     <div className="App">
-      {/* <Child counter={counterState} increment={incrementCounterState}/> */}
       <ThemeProvider theme={theme}>
-        <Navigation />
+        <BookContext.Provider value={{ listBook: listBook, handleListBook: handleListBook }}>
+          <Navigation />
+        </BookContext.Provider>
       </ThemeProvider>
     </div>
   );

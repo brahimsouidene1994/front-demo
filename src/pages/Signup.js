@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Link } from 'react-router';
 import authServices from '../services/api/auth'
+import sessionServices from '../services/api/session'
 
 const validationSchema = Yup.object({
     username: Yup.string().required('Username Is Required'),
@@ -26,7 +27,7 @@ export default function Signup({ handleAuth }) {
             await authServices
                 .signup(values)
                 .then((response) => {
-                    localStorage.setItem("session", response.accessToken);
+                    sessionServices.saveSession(response.accessToken)
                     handleAuth(true);
                 });
         },

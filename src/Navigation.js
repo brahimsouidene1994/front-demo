@@ -4,21 +4,28 @@ import Book from "./pages/Book";
 import NotFound from "./pages/NotFound";
 import React from "react";
 import Signup from "./pages/Signup";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router";
-
+import { BrowserRouter as Router, Routes, Route } from "react-router";
+import sessionServices from "./services/api/session";
+import authServices from "./services/api/auth";
+import NewBook from "./pages/NewBook";
 function Navigation() {
     const [auth, setAuth] = React.useState(false)
     React.useEffect(() =>{
-        console.log("component mounted")
         checkSession()
     },[])
-    const checkSession = ()=>{
-        const token = localStorage.getItem("session");
-        if(token){
-            console.log("session found ->", token);
-            setAuth(true)
-        } else {
-            setAuth(false)
+    const checkSession = async()=>{
+        const session = sessionServices.getSession()
+        if(session){
+            await authServices
+                .verifySession(session)
+                .then((response) => {
+                    console.log("response -> ", response)
+                    setAuth(true);
+                })
+                .catch((error) => {
+                    sessionServices.removeSession()
+                    console.error("Error :", error)
+                });
         }
 
     }
@@ -29,6 +36,7 @@ function Navigation() {
                     <Routes>
                         <Route path="/" exact element={<Home handleAuth={setAuth}/>} />
                         <Route path="/book/:id" element={<Book />} />
+                        <Route path="/newbook/:id" element={<NewBook />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                     :

@@ -22,7 +22,19 @@ const signup = async (credentials) =>{
     }
 }
 
+const verifySession = async (session) =>{
+    const url = `${process.env.REACT_APP_BACK_URL}api/auth/verifySession`
+    try {
+        const response = await axios.get(url, { headers: session })
+        return response.data
+    } catch (error) {
+        console.error("Error :", error)
+        throw error;
+    }
+}
+
 export default{
     signin,
-    signup
+    signup,
+    verifySession
 }

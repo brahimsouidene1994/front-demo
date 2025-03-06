@@ -120,3 +120,5 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
         -> npm install yup formik
     11- axios:
         -> npm install axios
+    12- install material ui icons
+        -> npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
