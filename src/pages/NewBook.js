@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router";
 import React from 'react';
 import * as Yup from 'yup';
 import { useBooks } from "../App";
-
+import bookServices from '../services/api/book'
 const validationSchema = Yup.object({
     title: Yup.string().required('Title Is Required'),
     author: Yup.string().min(5).required('Author Is Required'),
@@ -25,28 +25,37 @@ export default function NewBook() {
             author: book ? book.author : '',
             genre: book ? book.author : '',
             price: book ? book.price : '',
-            createdAt: book ? book.createdAt : "2024-01-12",
-            updatedAt: book ? book.updatedAt : "2024-02-05",
+            createdAt: book ? book.createdAt : "",
+            updatedAt: book ? book.updatedAt : "",
             cover: book ? book.cover : null,
             description: book ? book.description : ''
         },
         validationSchema,
-        onSubmit: (values) => {
+        onSubmit: async(values) => {
             console.log('values ->', values);
             //push to list book state
             if(book){
-                const indexBook = listBook.findIndex(_book=> parseInt(_book.id)=== parseInt(id))
-                if(indexBook !== -1){
-                    listBook[indexBook] = {...listBook[indexBook], ...values}
-                    handleListBook(listBook)
-                    navigate('/')
-                }
-            }else{
+
+                await bookServices
+                    .updateBook(id,values)
+                    .then((res) => {
+                        const indexBook = listBook.findIndex(_book=> parseInt(_book.id)=== parseInt(id))
+                        if(indexBook !== -1){
+                            listBook[indexBook] = {...listBook[indexBook], ...values}
+                            handleListBook(listBook)
+                            navigate('/')
+                        }
+                    })
+                    .catch(error => console.error(error))
                 
-                values["id"] = listBook[listBook.length-1]["id"]+1
-                listBook.push(values)
-                handleListBook(listBook)
-                navigate('/')
+            }else{
+                await bookServices
+                    .newBook(values)
+                    .then((res)=>{
+                        listBook.push(res)
+                        handleListBook(listBook)
+                        navigate('/')
+                    })
             }
         },
     });

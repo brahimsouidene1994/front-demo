@@ -5,13 +5,15 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import authServices from '../services/api/auth'
 import sessionServices from '../services/api/session'
+import { useSession } from '../App';
 
 const validationSchema = Yup.object({
     username: Yup.string().required('Username Is Required'),
     password: Yup.string().min(5).required('Password Is Required')
 })
 
-export default function Login({ handleAuth }) {
+export default function Login() {
+    const {handleAuth} = useSession()
     const formik = useFormik({
         initialValues: {
             username: '',
