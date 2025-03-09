@@ -1,16 +1,15 @@
 import './Home.css'
-import { Container, CircularProgress } from "@mui/material";
+import { Container, CircularProgress, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import BookItem from "../components/BookItem";
 import FloatButton from "../components/FloatButton";
 import React from "react";
 import ConfirmDialog from "../components/ConfirmDialog";
-import { useBooks } from "../App";
+import { useBooks } from "../services/state/context/ContextProvider";
 import bookServices from '../services/api/book'
 
 export default function Home() {
     const { listBook, handleListBook } = useBooks()
-    console.log("listBook", listBook)
     const [openDialog, setOpenDialog] = React.useState(false)
     const [selectedBook, setSelectedBook] = React.useState(-1)
 
@@ -34,13 +33,13 @@ export default function Home() {
     }
 
     return (
-        <>
+        <Container sx={{ py: 6 }}>
             {
                 !listBook ?
                     <CircularProgress />
                     :
                     listBook.length > 0 ?
-                        <Container sx={{ py: 6 }}>
+                        <>
                             <FloatButton />
                             <Grid container spacing={4}>
                                 {
@@ -48,11 +47,11 @@ export default function Home() {
                                 }
                             </Grid>
                             <ConfirmDialog open={openDialog} handleCloseDialog={handleCloseDialog} />
-                        </Container>
+                        </>
                         :
-                        <h1>No Book Found</h1>
+                        <Typography variant='h1'>No Book Found</Typography>
             }
 
-        </>
+        </Container>
     )
 }

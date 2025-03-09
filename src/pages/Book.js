@@ -1,14 +1,11 @@
 import React from 'react';
 import { useParams } from "react-router";
-// import { useBooks } from "../App";
 import { Box, Button, Container, Typography, Divider, Chip,CircularProgress } from "@mui/material";
 import COVER_IMAGE from '../assets/images/cover.jpg';
 import bookServices from '../services/api/book'
 export default function Book() {
     const { id } = useParams();
     const [book, setBook] = React.useState(null)
-    // const { listBook } = useBooks();
-    // const book = listBook.find((book) => book.id === parseInt(id));
 
     React.useEffect(() => {
         getBook()
@@ -21,11 +18,10 @@ export default function Book() {
             })
     }
     return (
-        <>
+        <Container sx={{ py: 6, display: 'flex', flexDirection: 'row', gap: 3 }}>
             {
             book ?
-
-                <Container sx={{ py: 6, display: 'flex', flexDirection: 'row', gap: 3 }}>
+                <>
                     <img src={book.cover ? book.cover : COVER_IMAGE} alt={book.title} style={{ width: '400px', borderRadius: 6 }} />
                     <Divider orientation="vertical" flexItem />
                     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', py: 6 }}>
@@ -41,10 +37,10 @@ export default function Book() {
                             <Button size='large' color="primary" variant="outlined" >Add To Wishlist</Button>
                         </Box>
                     </Box>
-                </Container>
+                </>
                 :
                 <CircularProgress />
             }
-        </>
+        </Container>
     )
 }

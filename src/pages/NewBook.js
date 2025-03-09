@@ -1,10 +1,12 @@
-import { Box, Typography, TextField, Button, Container, Paper } from '@mui/material';
+import { Box, Typography, Button, Container, Paper } from '@mui/material';
 import { useFormik } from 'formik';
 import { useParams, useNavigate } from "react-router";
 import React from 'react';
 import * as Yup from 'yup';
-import { useBooks } from "../App";
-import bookServices from '../services/api/book'
+import { useBooks } from "../services/state/context/ContextProvider";
+import bookServices from '../services/api/book';
+import CustomTextField from '../components/CustomTextField';
+
 const validationSchema = Yup.object({
     title: Yup.string().required('Title Is Required'),
     author: Yup.string().min(5).required('Author Is Required'),
@@ -75,73 +77,37 @@ export default function NewBook() {
                         <Typography variant="h3">
                             {book ? "Update Book" : "Create New Book"}
                         </Typography>
-                        <TextField
-                            id='title'
+                        <CustomTextField
                             name='title'
                             label='Title'
                             type='text'
-                            onChange={formik.handleChange}
-                            value={formik.values.title}
-                            fullWidth
-                            required
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.title && Boolean(formik.errors.title)}
-                            helperText={formik.touched.title && formik.errors.title}
+                            formik={formik}
                         />
-                        <TextField
-                            id='author'
+                        <CustomTextField
                             name='author'
                             label='Author'
                             type='text'
-                            onChange={formik.handleChange}
-                            value={formik.values.author}
-                            fullWidth
-                            required
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.author && Boolean(formik.errors.author)}
-                            helperText={formik.touched.author && formik.errors.author}
+                            formik={formik}
                         />
-                        <TextField
-                            id='genre'
+                        <CustomTextField
                             name='genre'
                             label='Genre'
                             type='text'
-                            onChange={formik.handleChange}
-                            value={formik.values.genre}
-                            fullWidth
-                            required
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.genre && Boolean(formik.errors.genre)}
-                            helperText={formik.touched.genre && formik.errors.genre}
+                            formik={formik}
                         />
-                        <TextField
-                            id='price'
+                        <CustomTextField
                             name='price'
                             label='Price'
-                            type='text'
-                            placeholder='$13.50'
-                            onChange={formik.handleChange}
-                            value={formik.values.price}
-                            fullWidth
-                            required
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.price && Boolean(formik.errors.price)}
-                            helperText={formik.touched.price && formik.errors.price}
+                            type='number'
+                            formik={formik}
                         />
-                        <TextField
-                            id='description'
+                        <CustomTextField
                             name='description'
                             label='Description'
                             type='text'
                             multiline={true}
                             rows={3}
-                            onChange={formik.handleChange}
-                            value={formik.values.description}
-                            fullWidth
-                            required
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.description && Boolean(formik.errors.description)}
-                            helperText={formik.touched.description && formik.errors.description}
+                            formik={formik}
                         />
 
                         <Button type='submit' variant="contained" color='primary'>{book ? "Update" : "Create"}</Button>

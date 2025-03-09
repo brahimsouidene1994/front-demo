@@ -1,11 +1,12 @@
-import { Box, Typography, TextField, Button, Container } from '@mui/material';
+import { Box, Typography, Button, Container } from '@mui/material';
 import { Link } from 'react-router';
 import React from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import authServices from '../services/api/auth'
 import sessionServices from '../services/api/session'
-import { useSession } from '../App';
+import { useSession } from '../services/state/context/ContextProvider';
+import CustomTextField from '../components/CustomTextField';
 
 const validationSchema = Yup.object({
     username: Yup.string().required('Username Is Required'),
@@ -13,15 +14,14 @@ const validationSchema = Yup.object({
 })
 
 export default function Login() {
-    const {handleAuth} = useSession()
+    const { handleAuth } = useSession()
     const formik = useFormik({
         initialValues: {
             username: '',
             password: ''
         },
         validationSchema,
-        onSubmit: async(values) => {
-            console.log('values ->', values);
+        onSubmit: async (values) => {
             await authServices
                 .signin(values)
                 .then((response) => {
@@ -46,31 +46,17 @@ export default function Login() {
                     <Typography variant="h3">
                         Login
                     </Typography>
-                    <TextField
-                        id='username'
-                        name='username'
+                    <CustomTextField
                         label="Username"
-                        type='text'
-                        onChange={formik.handleChange}
-                        value={formik.values.username}
-                        fullWidth
-                        required
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.username && Boolean(formik.errors.username)}
-                        helperText={formik.touched.username && formik.errors.username}
+                        name="username"
+                        type="text"
+                        formik={formik}
                     />
-                    <TextField
-                        label='Password'
-                        type='password'
-                        name='password'
-                        id='password'
-                        onChange={formik.handleChange}
-                        value={formik.values.password}
-                        fullWidth
-                        required
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.password && Boolean(formik.errors.password)}
-                        helperText={formik.touched.password && formik.errors.password}
+                    <CustomTextField
+                        label="Password"
+                        name="password"
+                        type="password"
+                        formik={formik}
                     />
                     <Button type='submit' variant="contained" color='primary'>Login</Button>
                     <Typography variant="h5">
